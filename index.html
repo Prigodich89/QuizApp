@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Викторина для первоклассника</title>
+</head>
+
+<body>
+    <div class="main">
+
+        
+         <div class="app" v-show="showMain">
+            <div class="app_header">
+                <h2 class="app_header-title">
+                    Узнайте насколько ребенок <br>
+                     подготовлен к школе!!!
+                    </h2>
+            </div>
+            <div class="app_body">
+                <button class="app_btn" @click="goToQuestions">
+                    <i class="fa fa-play-circle-o" aria-hidden="true"></i>
+                    <div class="app_btn_text">Начать викторину</div>
+                </button>
+                <button class="app_btn" @click="goToAchivments">
+                    <i class="fa fa-trophy" aria-hidden="true"></i>
+                    <div class="app_btn_text">Результат</div>
+                </button>
+                <!-- <button class="app_btn" @click="goToSocial">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <div class="app_btn_text">Автор</div>
+                </button> -->
+            </div>
+        </div> 
+
+           <div class="app achivments" v-show="showAchivments" >
+            <div class="app_body">
+                <div class="app_body-inner">
+                    <h2 class="app_body-title">
+                        <i class="fa fa-trophy" aria-hidden="true"></i>
+                        Результат
+                    </h2>
+                    <div class="app_body-top">
+                     
+                        <div class="app_card">
+                            <div class="app_card-text">Всего игр</div>
+                            <div class="app-card-count"> {{ totalGames }} </div>
+                        </div>
+                        <div class="app_card">
+                            <div class="app_card-text">Лучшая оценка</div>
+                            <div class="app-card-count"> {{ maxEstimation }} </div>
+                        </div>
+                    </div>
+                   
+                    <div class="app_body-middle">
+
+                        <div class="app_result" 
+                         v-for="(estimation, k) in results"
+                         v-show="showResultEstimation[k]"
+                        @click="goToResult(k)">
+                            <div class="app_result-score">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <div class="app_result-count">{{ estimation.points }}</div>
+                            </div>
+                            <div id="estimat" class="app_result-name"> {{ estimation.name }} </div>
+                            <div class="app_result-amount"> {{ totalGame[k] }} </div>
+                        </div>
+
+                    </div>
+                    <div class="app_body-bottom">
+                        <button class="app_btn btn_back btn_achivment"  @click="goToMain">
+                            <i class="fa fa-reply" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>  
+
+
+          <div class="app question" v-show="showQuestions">
+            <div class="app_header">
+                <div class="app_header-inner">
+                    <div class="app_count"># {{ number+1 }}</div>
+                    <div class="app_text">{{ questions[number][0] }}</div>
+                </div>
+            </div>
+            <div class="app_body">
+                <button class="app_btn"
+                v-for="(answer, i) in questions[number][1]"
+                @click="nextQuestions(questions[number][2][i])"
+                >
+                    <div class="app_body-text">{{ answer }}</div>
+                </button>
+            </div>
+        </div>   
+
+
+
+<!--        <div class="app" v-show="showSocial">
+            <div class="app_body">
+                <a class="app_btn" href="" target="_blank"> <i class="fa fa-instagram" aria-hidden="true"></i>
+                    <div class="app_btn-text">Instagram</div>
+                </a>
+                <a class="app_btn" href="" target="_blank"> <i class="fa fa-twitter" aria-hidden="true"></i>
+                    <div class="app_btn-text">twitter</div>
+                </a>
+                <a class="app_btn" href="" target="_blank"> <i class="fa fa-facebook" aria-hidden="true"></i>
+                    <div class="app_btn-text">facebook</div>
+                </a>
+                <a class="app_btn" href="" target="_blank"> <i class="fa fa-vk" aria-hidden="true"></i>
+                    <div class="app_btn-text">Vkontacte</div>
+                </a>
+                <a class="app_btn" href="" target="_blank"> <i class="fa fa-youtube-play" aria-hidden="true"></i>
+                    <div class="app_btn-text">youtube</div>
+                </a>
+                <button class="app_btn btn_back" @click="goToMain">
+                    <i class="fa fa-reply" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div> 
+-->
+
+        <div class="app result" v-show="showResult"  :data-estimation="resultEstimation">
+            <div class="app_body">
+                <div class="app_result-inner">
+                    <div class="result_title"> {{ results[resultEstimation].name }} </div>
+                    <div class="result_img">
+                        <img :src="'/img/'+resultEstimation+'_logo.jpg'">
+                    </div>
+                    <div class="result_text-box">
+                        <p class="result_text"> {{ results[resultEstimation].description }}</p>
+                        <p class="result_quote">{{ results[resultEstimation].recommendations }}  </p>
+                        <p class="result_quote">{{ results[resultEstimation].wishes }}  </p>
+                        
+                    </div>
+                    <div>
+                        <button :class="'app_btn btn_back btn_'+resultEstimation" @click="goToAchivments">
+                            <i class="fa fa-reply" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    <script src="js/const.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
